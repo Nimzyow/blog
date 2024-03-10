@@ -1,3 +1,40 @@
+TODO: Create S3 bucket to host static site objects<br/>
+TODO: Build gatsby site and push objects to S3, example of below command:<br/>
+```bash
+aws s3 sync ./public s3://example-of-my-bucket-name/
+```
+TODO: We need to create a Cloudfront distribution for NA and Europe only<br/>
+TODO: Cloudfront distribution set Default root object as index.html<br/>
+TODO: Setup WAF for Cloudfront distribution.<br/>
+TODO: Create Origin access control (give it the name of your s3 bucket url e.g: nimasoufiani-blog.s3.eu-west-2.amazonaws.com)<br/>
+TODO: Attach Origin access control to Cloudfront Distribution<br/>
+TODO: Cloudfront distribution set Redirect HTTP to HTTPS
+TODO: Cloudfront compress objects automatically.
+TODO: We need to create a Policy to attach to S3 with Cloudfront details. Example below:
+```json
+{
+    "Version": "2008-10-17",
+    "Id": "PolicyForCloudFrontPrivateContent",
+    "Statement": [
+        {
+            "Sid": "AllowCloudFrontServicePrincipal",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "cloudfront.amazonaws.com"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::nimasoufiani-blog/*",
+            "Condition": {
+                "StringEquals": {
+                    "AWS:SourceArn": "REPLACE WITH CLOUDFRONT DISTRIBUTION ARN"
+                }
+            }
+        }
+    ]
+}
+```
+TODO: Attach policy to S3 bucket<br/>
+
 <p align="center">
   <a href="https://www.gatsbyjs.com/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts">
     <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" />
