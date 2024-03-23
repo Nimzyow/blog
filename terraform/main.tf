@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.36"
+      version = "~> 5.41"
     }
   }
 }
@@ -64,47 +64,6 @@ resource "aws_cloudfront_distribution" "nimasoufiani-blog-cloudfront-distributio
   }
 }
 
-resource "aws_iam_policy" "policy" {
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "s3:GetObject",
-        ]
-        Effect   = "Allow"
-        Resource = ["${aws_s3_bucket.nimasoufiani-blog.arn}/*"]
-
-      },
-    ]
-  })
-}
-
-data "aws_iam_policy_document" "nimasoufiani-blog-policy-document" {
-  statement {
-    sid       = "AllowCloudFrontServicePrincipal"
-    actions   = ["s3:GetObject"]
-    resources = ["${aws_s3_bucket.nimasoufiani-blog.arn}/*"]
-    effect    = "Allow"
-    condition {
-      test     = "ForAnyValue:StringEquals"
-      variable = "AWS:SourceArn"
-      values   = [aws_cloudfront_distribution.nimasoufiani-blog-cloudfront-distribution.arn]
-    }
-  }
-
-}
-
-resource "aws_iam_policy" "nimasoufiani-blog-iam-policy" {
-  name   = "nimasoufiani-blog-iam-policy"
-  policy = data.aws_iam_policy_document.nimasoufiani-blog-policy-document.json
-  tags = {
-    "Name" = local.tag_name
-  }
-}
-
 resource "aws_s3_bucket_ownership_controls" "nimasoufiani-blog-ownership-controls" {
   bucket = aws_s3_bucket.nimasoufiani-blog.id
   rule {
@@ -114,5 +73,25 @@ resource "aws_s3_bucket_ownership_controls" "nimasoufiani-blog-ownership-control
 
 resource "aws_s3_bucket_policy" "nimasoufiani-blog-bucket-policy" {
   bucket = aws_s3_bucket.nimasoufiani-blog.id
-  policy = data.aws_iam_policy_document.nimasoufiani-blog-policy-document.json
+  policy = <<EOT
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowCloudFrontServicePrincipalReadOnly",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "cloudfront.amazonaws.com"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "${aws_s3_bucket.nimasoufiani-blog.arn}/*",
+            "Condition": {
+                "StringEquals": {
+                    "AWS:SourceArn": "${aws_cloudfront_distribution.nimasoufiani-blog-cloudfront-distribution.arn}"
+                }
+            }
+        }
+    ]
+}
+EOT
 }
