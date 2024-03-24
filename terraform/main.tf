@@ -46,7 +46,7 @@ resource "aws_cloudfront_distribution" "nimasoufiani-blog-cloudfront-distributio
   restrictions {
     geo_restriction {
       restriction_type = "whitelist"
-      locations        = ["GB"]
+      locations        = ["GB", "US"]
     }
   }
   default_cache_behavior {
