@@ -8,7 +8,11 @@ terraform {
 }
 
 locals {
-  tag_name = "terraform"
+  tag_name   = "terraform"
+  name       = "nimasoufiani"
+  dev        = "dev"
+  staging    = "stage"
+  production = "prod"
 }
 
 
@@ -17,9 +21,10 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "nimasoufiani-blog" {
-  bucket = "nimasoufiani-blog"
+  bucket = var.env == "dev" ? "${local.name}-blog-${local.dev}" : var.env == local.production ? "${local.name}-blog" : "${local.name}-blog-${local.staging}"
   tags = {
     "Name" = local.tag_name
+    "Env"  = var.env
   }
 }
 
@@ -61,6 +66,7 @@ resource "aws_cloudfront_distribution" "nimasoufiani-blog-cloudfront-distributio
   }
   tags = {
     "Name" = local.tag_name
+    "Env"  = var.env
   }
 }
 

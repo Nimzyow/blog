@@ -3,7 +3,7 @@ variable "env" {
   description = "env name"
   default     = "dev"
   validation {
-    condition     = contains(["dev", "staging", "production"], var.env)
-    error_message = "Valid values for env are 'dev', 'staging', 'production'"
+    condition     = contains(["dev", "stage", "prod"], var.env)
+    error_message = "Valid values for env are 'dev', 'stage', 'prod'"
   }
 }
