@@ -2,8 +2,7 @@ name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 env:
-  AWS_REGION: "eu-west-2" #Change to reflect your Region
-  # Permission can be added at job level or workflow level
+  AWS_REGION: "eu-west-2"
 permissions:
   id-token: write # This is required for requesting the JWT
   contents: read # This is required for actions/checkout
