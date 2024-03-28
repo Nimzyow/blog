@@ -3,14 +3,14 @@ TODO: Build gatsby site and push objects to S3, example of below command:<br/>
 ```bash
 aws s3 sync ./public s3://example-of-my-bucket-name/
 ```
-TODO: Create Origin access control (give it the name of your s3 bucket url e.g: nimasoufiani-blog.s3.eu-west-2.amazonaws.com)<br/>
-TODO: We need to create a Cloudfront distribution for NA and Europe only<br/>
-TODO: Cloudfront distribution set Default root object as index.html<br/>
-TODO: Setup WAF for Cloudfront distribution.<br/>
-TODO: Attach Origin access control to Cloudfront Distribution<br/>
-TODO: Cloudfront distribution set Redirect HTTP to HTTPS
-TODO: Cloudfront compress objects automatically.
-TODO: We need to create a Policy to attach to S3 with Cloudfront details. Example below:
+TODO: Create Origin access control (give it the name of your s3 bucket url e.g: nimasoufiani-blog.s3.eu-west-2.amazonaws.com)<br/> DONE
+TODO: We need to create a Cloudfront distribution for NA and Europe only<br/> DONE
+TODO: Cloudfront distribution set Default root object as index.html<br/> DONE
+TODO: Setup WAF for Cloudfront distribution.<br/> No need?
+TODO: Attach Origin access control to Cloudfront Distribution<br/> DONE
+TODO: Cloudfront distribution set Redirect HTTP to HTTPS DONE
+TODO: Cloudfront compress objects automatically. DONE
+TODO: We need to create a Policy to attach to S3 with Cloudfront details. Example below: DONE
 ```json
 {
     "Version": "2008-10-17",
@@ -33,7 +33,14 @@ TODO: We need to create a Policy to attach to S3 with Cloudfront details. Exampl
     ]
 }
 ```
-TODO: Attach policy to S3 bucket<br/>
+TODO: Attach policy to S3 bucket<br/> DONE
+
+Managed to set up IODC successfully. 
+Need to create an identifier in aws. See these 2 guides:
+* https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/
+* https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services
+
+
 
 <p align="center">
   <a href="https://www.gatsbyjs.com/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts">
