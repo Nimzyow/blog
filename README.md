@@ -1,16 +1,16 @@
-TODO: Create S3 bucket to host static site objects<br/> DONE
-TODO: Build gatsby site and push objects to S3, example of below command:<br/>
+Create S3 bucket to host static site objects<br/> DONE
+Build gatsby site and push objects to S3, example of below command:<br/>
 ```bash
 aws s3 sync ./public s3://example-of-my-bucket-name/
 ```
-TODO: Create Origin access control (give it the name of your s3 bucket url e.g: nimasoufiani-blog.s3.eu-west-2.amazonaws.com)<br/> DONE
-TODO: We need to create a Cloudfront distribution for NA and Europe only<br/> DONE
-TODO: Cloudfront distribution set Default root object as index.html<br/> DONE
-TODO: Setup WAF for Cloudfront distribution.<br/> No need?
-TODO: Attach Origin access control to Cloudfront Distribution<br/> DONE
-TODO: Cloudfront distribution set Redirect HTTP to HTTPS DONE
-TODO: Cloudfront compress objects automatically. DONE
-TODO: We need to create a Policy to attach to S3 with Cloudfront details. Example below: DONE
+Create Origin access control (give it the name of your s3 bucket url e.g: nimasoufiani-blog.s3.eu-west-2.amazonaws.com)<br/> DONE
+We need to create a Cloudfront distribution for NA and Europe only<br/> DONE
+Cloudfront distribution set Default root object as index.html<br/> DONE
+Setup WAF for Cloudfront distribution.<br/> No need?
+Attach Origin access control to Cloudfront Distribution<br/> DONE
+Cloudfront distribution set Redirect HTTP to HTTPS DONE
+Cloudfront compress objects automatically. DONE
+We need to create a Policy to attach to S3 with Cloudfront details. Example below: DONE
 ```json
 {
     "Version": "2008-10-17",
@@ -33,7 +33,31 @@ TODO: We need to create a Policy to attach to S3 with Cloudfront details. Exampl
     ]
 }
 ```
-TODO: Attach policy to S3 bucket<br/> DONE
+Attach policy to S3 bucket<br/> DONE
+
+See if Terraform can apply only one resource. Yes, you can
+TODO: Workflow will be configured to the following:
+dev and staging branch:
+1 - Clone repo
+2 - npm i
+3 - build project
+4 - Use terraform to create bucket only
+5 - push artifacts to bucket
+6 - Use terraform to apply everything else
+
+production branch:
+1 - Clone repo
+2 - npm i
+3 - build project
+4 - Use terraform to create bucket only FOR STAGING
+5 - push artifacts to STAGING bucket
+6 - Use terraform to apply everything else to STAGING environment (staging for cloudfront, policies etc.. )
+7 - Use terraform to create bucket only for PRODUCTION
+8 - push artifacts to PRODUCTION bucket
+9 - Use terraform to apply everything else to PRODUCTION environment
+
+
+
 
 Managed to set up IODC successfully. 
 Need to create an identifier in aws. See these 2 guides:
