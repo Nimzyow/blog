@@ -41,20 +41,22 @@ dev and staging branch:
 1 - Clone repo
 2 - npm i
 3 - build project
-4 - Use terraform to create bucket only
-5 - push artifacts to bucket
-6 - Use terraform to apply everything else
+4 - Assume role. Permission for cloudfront distribution creation, s3 bucket creation for dev/staging
+5 - Use terraform to create bucket only
+6 - push artifacts to bucket
+7 - Use terraform to apply everything else
 
 production branch:
 1 - Clone repo
 2 - npm i
 3 - build project
-4 - Use terraform to create bucket only FOR STAGING
-5 - push artifacts to STAGING bucket
-6 - Use terraform to apply everything else to STAGING environment (staging for cloudfront, policies etc.. )
-7 - Use terraform to create bucket only for PRODUCTION
-8 - push artifacts to PRODUCTION bucket
-9 - Use terraform to apply everything else to PRODUCTION environment
+4 - Assume role. Permission for cloudfront distribution creation, s3 bucket creation for dev/staging
+5 - Use terraform to create bucket only FOR STAGING
+6 - push artifacts to STAGING bucket
+7 - Use terraform to apply everything else to STAGING environment (staging for cloudfront, policies etc.. )
+8 - Use terraform to create bucket only for PRODUCTION
+9 - push artifacts to PRODUCTION bucket
+10 - Use terraform to apply everything else to PRODUCTION environment
 
 
 
