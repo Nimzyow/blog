@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 21.6.1
       - name: install dependencies
-        run: npm i
+        run: npm install --legacy-peer-deps
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
