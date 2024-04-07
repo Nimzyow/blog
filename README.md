@@ -35,7 +35,10 @@ We need to create a Policy to attach to S3 with Cloudfront details. Example belo
 ```
 Attach policy to S3 bucket<br/> DONE
 
-See if Terraform can apply only one resource. Yes, you can
+See if Terraform can apply only one resource. Yes, you can through something like:
+```bash
+terraform plan -target=aws_s3_bucket.nimasoufiani-blog -out=tfplan -var env=stage
+```
 TODO: Workflow will be configured to the following:
 dev and staging branch:
 1 - Clone repo
@@ -66,6 +69,8 @@ Need to create an identifier in aws. See these 2 guides:
 * https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/
 * https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services
 
+
+You cannot dynamically create new s3 buckets if they all sit under the same resource
 
 
 <p align="center">
