@@ -10,7 +10,7 @@ terraform {
 locals {
   tag_name = "terraform"
   name     = "nimasoufiani"
-  env      = "dev"
+  env      = "stage"
 }
 
 
@@ -22,7 +22,7 @@ resource "aws_s3_bucket" "nimasoufiani-blog" {
   bucket = "${local.name}-blog-${local.env}"
   tags = {
     "Name" = local.tag_name
-    "Env"  = var.env
+    "Env"  = local.env
   }
 }
 
@@ -41,6 +41,7 @@ resource "aws_cloudfront_distribution" "nimasoufiani-blog-cloudfront-distributio
   }
   enabled             = true
   default_root_object = "index.html"
+  price_class         = "PriceClass_100"
   restrictions {
     geo_restriction {
       restriction_type = "whitelist"
@@ -64,7 +65,7 @@ resource "aws_cloudfront_distribution" "nimasoufiani-blog-cloudfront-distributio
   }
   tags = {
     "Name" = local.tag_name
-    "Env"  = var.env
+    "Env"  = local.env
   }
 }
 

@@ -3,6 +3,10 @@ Build gatsby site and push objects to S3, example of below command:<br/>
 ```bash
 aws s3 sync ./public s3://example-of-my-bucket-name/
 ```
+To delete all items in a bucket
+```bash
+aws s3 rm s3://nimasoufiani-blog-dev/ --recursive
+```
 Create Origin access control (give it the name of your s3 bucket url e.g: nimasoufiani-blog.s3.eu-west-2.amazonaws.com)<br/> DONE
 We need to create a Cloudfront distribution for NA and Europe only<br/> DONE
 Cloudfront distribution set Default root object as index.html<br/> DONE
