@@ -10,7 +10,7 @@ terraform {
 locals {
   tag_name = "terraform"
   name     = "nimasoufiani"
-  env      = "dev"
+  env      = "prod"
 }
 
 
@@ -22,7 +22,7 @@ resource "aws_s3_bucket" "nimasoufiani-blog" {
   bucket = "${local.name}-blog-${local.env}"
   tags = {
     "Name" = local.tag_name
-    "Env"  = var.env
+    "Env"  = local.env
   }
 }
 
@@ -64,7 +64,7 @@ resource "aws_cloudfront_distribution" "nimasoufiani-blog-cloudfront-distributio
   }
   tags = {
     "Name" = local.tag_name
-    "Env"  = var.env
+    "Env"  = local.env
   }
 }
 
