@@ -30,6 +30,7 @@ jobs:
           name: gatsby-artifacts
           path: ./public/**/*
   create-bucket:
+    needs: build
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/master' }}
     steps:
@@ -51,7 +52,8 @@ jobs:
       - name: Create bucket
         run: terraform apply -target=aws_s3_bucket.nimasoufiani-blog -auto-approve
         working-directory: ${{ github.workspace }}/terraform/dev
-  put-artifacts-to-s3:
+  upload-artifacts:
+    needs: create-bucket
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/master' }}
     steps:
@@ -63,6 +65,7 @@ jobs:
         run: aws s3 sync ./ s3://nimasoufiani-blog-dev/
         working-directory: ${{ github.workspace }}
   create-distribution:
+    needs: upload-artifacts
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/master' }}
     steps:
