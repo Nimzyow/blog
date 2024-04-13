@@ -83,6 +83,14 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/master' }}
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+      - name: Initialise terraform
+        run: terraform init
+        working-directory: ${{ github.workspace }}/terraform/dev
       - name: Apply all terraform configuration
         run: terraform apply -auto-approve
         working-directory: ${{ github.workspace }}/terraform/dev
