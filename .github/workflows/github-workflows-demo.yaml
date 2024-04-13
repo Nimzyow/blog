@@ -40,9 +40,6 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/Github-AWS-IODC
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
-      - name: Sts GetCallerIdentity
-        run: |
-          aws sts get-caller-identity
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.7.5
@@ -63,6 +60,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: gatsby-artifacts
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/Github-AWS-IODC
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
       - name: copy artifacts to s3
         run: aws s3 sync ./ s3://nimasoufiani-blog-dev/
         working-directory: ${{ github.workspace }}
