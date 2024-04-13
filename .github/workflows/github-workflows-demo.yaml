@@ -42,6 +42,9 @@ jobs:
       - name: Create bucket
         run: terraform apply -target=aws_s3_bucket.nimasoufiani-blog -auto-approve
         working-directory: ${{ github.workspace }}/terraform/dev
+      - name: copy artifacts to s3
+        run: aws s3 sync ./public s3://nimasoufiani-blog-dev/
+        working-directory: ${{ github.workspace }}
   # create-bucket:
   #   runs-on: ubuntu-latest
   #   if: ${{ github.ref == 'refs/heads/master' }}
@@ -69,13 +72,13 @@ jobs:
       # - name: Create bucket
       #   run: terraform apply -target=aws_s3_bucket.nimasoufiani-blog -auto-approve
       #   working-directory: ${{ github.workspace }}/terraform/dev
-  upload-gatsby-artifacts-to-s3:
-    runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }}
-    steps:
-      - name: copy artifacts to s3
-        run: aws s3 sync ./public s3://nimasoufiani-blog-dev/
-        working-directory: ${{ github.workspace }}
+  # upload-gatsby-artifacts-to-s3:
+  #   runs-on: ubuntu-latest
+  #   if: ${{ github.ref == 'refs/heads/master' }}
+  #   steps:
+  #     - name: copy artifacts to s3
+  #       run: aws s3 sync ./public s3://nimasoufiani-blog-dev/
+  #       working-directory: ${{ github.workspace }}
   create-distribution:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/master' }}
