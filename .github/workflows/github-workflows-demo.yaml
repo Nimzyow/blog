@@ -5,14 +5,15 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
     branches:
       - master
 env:
-  AWS_REGION: eu-west-2
+    TERRAFORM_DIR: ${{ github.ref == 'refs/heads/master' && 'dev' || github.ref == 'refs/heads/staging' && 'staging' || github.ref == 'refs/heads/production' && 'production' }}
+    AWS_REGION: eu-west-2
 permissions:
   id-token: write
   contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging' || github.ref == 'refs/head/production' }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -24,9 +25,14 @@ jobs:
         run: npm install --legacy-peer-deps
       - name: build gatsby project
         run: npm run build
+      - name: upload gatsby artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gatsby-artifacts
+          path: ./public/**/*
   create-bucket:
+    needs: build
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }}
     steps:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -34,35 +40,54 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/Github-AWS-IODC
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
-      - name: Sts GetCallerIdentity
-        run: |
-          aws sts get-caller-identity
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.7.5
-      # - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      # - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      # - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      # - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      # - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+      - name: Check out repository code
+        uses: actions/checkout@v4
       - name: Initialise terraform
         run: terraform init
-        working-directory: ${{ github.workspace }}/terraform/dev
+        working-directory: ${{ github.workspace }}/terraform/${{ env.TERRAFORM_DIR }}
       - name: Create bucket
         run: terraform apply -target=aws_s3_bucket.nimasoufiani-blog -auto-approve
-        working-directory: ${{ github.workspace }}/terraform/dev
-  upload-gatsby-artifacts-to-s3:
+        working-directory: ${{ github.workspace }}/terraform/${{ env.TERRAFORM_DIR }}
+  upload-artifacts:
+    needs: create-bucket
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }}
     steps:
+      - name: Download Gatsby artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: gatsby-artifacts
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/Github-AWS-IODC
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
       - name: copy artifacts to s3
-        run: aws s3 sync ./public s3://nimasoufiani-blog-dev/
+        run: aws s3 sync ./ s3://nimasoufiani-blog-dev/
         working-directory: ${{ github.workspace }}
   create-distribution:
+    needs: upload-artifacts
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/master' }}
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/Github-AWS-IODC
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Initialise terraform
+        run: terraform init
+        working-directory: ${{ github.workspace }}/terraform/${{ env.TERRAFORM_DIR }}
       - name: Apply all terraform configuration
         run: terraform apply -auto-approve
-        working-directory: ${{ github.workspace }}/terraform/dev
+        working-directory: ${{ github.workspace }}/terraform/${{ env.TERRAFORM_DIR }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
