@@ -4,6 +4,8 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
   push:
     branches:
       - master
+      - staging
+      - production
 env:
     TERRAFORM_DIR: ${{ github.ref == 'refs/heads/master' && 'dev' || github.ref == 'refs/heads/staging' && 'staging' || github.ref == 'refs/heads/production' && 'production' }}
     AWS_REGION: eu-west-2
@@ -13,7 +15,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging' || github.ref == 'refs/head/production' }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
