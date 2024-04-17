@@ -7,7 +7,7 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
       - staging
       - production
 env:
-    TERRAFORM_DIR: ${{ github.ref == 'refs/heads/master' && 'dev' || github.ref == 'refs/heads/staging' && 'staging' || github.ref == 'refs/heads/production' && 'production' }}
+    TERRAFORM_DIR: ${{ github.ref == 'refs/heads/master' && 'dev' || github.ref == 'refs/heads/staging' && 'stage' || github.ref == 'refs/heads/production' && 'prod' }}
     AWS_REGION: eu-west-2
 permissions:
   id-token: write
