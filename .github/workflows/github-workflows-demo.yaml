@@ -5,14 +5,15 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
     branches:
       - master
 env:
-  AWS_REGION: eu-west-2
+    TERRAFORM_DIR: ${{ github.ref == 'refs/heads/master' && 'dev' || github.ref == 'refs/heads/staging' && 'staging' || github.ref == 'refs/heads/production' && 'production' }}
+    AWS_REGION: eu-west-2
 permissions:
   id-token: write
   contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging' || github.ref == 'refs/head/production' }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -32,7 +33,6 @@ jobs:
   create-bucket:
     needs: build
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }}
     steps:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -47,14 +47,13 @@ jobs:
         uses: actions/checkout@v4
       - name: Initialise terraform
         run: terraform init
-        working-directory: ${{ github.workspace }}/terraform/dev
+        working-directory: ${{ github.workspace }}/terraform/${{ env.TERRAFORM_DIR }}
       - name: Create bucket
         run: terraform apply -target=aws_s3_bucket.nimasoufiani-blog -auto-approve
-        working-directory: ${{ github.workspace }}/terraform/dev
+        working-directory: ${{ github.workspace }}/terraform/${{ env.TERRAFORM_DIR }}
   upload-artifacts:
     needs: create-bucket
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }}
     steps:
       - name: Download Gatsby artifacts
         uses: actions/download-artifact@v4
@@ -87,8 +86,8 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       - name: Initialise terraform
         run: terraform init
-        working-directory: ${{ github.workspace }}/terraform/dev
+        working-directory: ${{ github.workspace }}/terraform/${{ env.TERRAFORM_DIR }}
       - name: Apply all terraform configuration
         run: terraform apply -auto-approve
-        working-directory: ${{ github.workspace }}/terraform/dev
+        working-directory: ${{ github.workspace }}/terraform/${{ env.TERRAFORM_DIR }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
