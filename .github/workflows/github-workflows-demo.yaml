@@ -67,7 +67,7 @@ jobs:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
       - name: copy artifacts to s3
-        run: aws s3 sync ./ s3://nimasoufiani-blog-dev/
+        run: aws s3 sync ./ s3://nimasoufiani-blog-${{ env.TERRAFORM_DIR }}/
         working-directory: ${{ github.workspace }}
   create-distribution:
     needs: upload-artifacts
