@@ -2,6 +2,7 @@ import React from "react";
 import Toast from "react-bootstrap/Toast";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
+import Layout from "../components/layout";
 
 const ExampleToast = ({ children }: { children: React.ReactNode }) => {
   const [show, toggleShow] = React.useState(true);
@@ -21,7 +22,7 @@ const ExampleToast = ({ children }: { children: React.ReactNode }) => {
 
 const About = () => {
   return (
-    <Container className="p-3">
+    <Layout>
       <div>
         <h1 className="header">Welcome To React-Bootstrap</h1>
         <ExampleToast>
@@ -31,7 +32,7 @@ const About = () => {
           </span>
         </ExampleToast>
       </div>
-    </Container>
+    </Layout>
   );
 };
 
