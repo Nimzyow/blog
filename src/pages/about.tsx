@@ -1,6 +1,5 @@
 import React from "react";
 import Toast from "react-bootstrap/Toast";
-import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Layout from "../components/layout";
 
@@ -24,7 +23,7 @@ const About = () => {
   return (
     <Layout>
       <div>
-        <h1 className="header">Welcome To React-Bootstrap</h1>
+        <h1 className="header text-white">Welcome To React-Bootstrap</h1>
         <ExampleToast>
           We now have Toasts on the about page
           <span role="img" aria-label="tada">
