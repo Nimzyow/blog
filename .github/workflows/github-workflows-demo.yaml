@@ -90,4 +90,7 @@ jobs:
       - name: Apply all terraform configuration
         run: terraform apply -auto-approve
         working-directory: ${{ github.workspace }}/terraform/${{ env.TERRAFORM_DIR }}
+      - name: Terraform output
+        run: terraform output
+        working-directory: ${{ github.workspace }}/terraform/${{ env.TERRAFORM_DIR }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
