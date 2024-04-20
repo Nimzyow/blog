@@ -23,9 +23,9 @@ jobs:
         with:
           node-version: 21.6.1
       - name: install dependencies
-        run: npm install --legacy-peer-deps
+        run: yarn install
       - name: build gatsby project
-        run: npm run build
+        run: yarn run build
       - name: upload gatsby artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -89,5 +89,8 @@ jobs:
         working-directory: ${{ github.workspace }}/terraform/${{ env.TERRAFORM_DIR }}
       - name: Apply all terraform configuration
         run: terraform apply -auto-approve
+        working-directory: ${{ github.workspace }}/terraform/${{ env.TERRAFORM_DIR }}
+      - name: Terraform output
+        run: terraform output
         working-directory: ${{ github.workspace }}/terraform/${{ env.TERRAFORM_DIR }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
