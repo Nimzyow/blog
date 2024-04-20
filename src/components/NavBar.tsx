@@ -8,7 +8,16 @@ const NavBar = () => {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand>React-Bootstrap</Navbar.Brand>
+        <Navbar.Brand
+          onClick={() => {
+            navigate("/");
+          }}
+          style={{
+            cursor: "pointer",
+          }}
+        >
+          Nima Soufiani
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">

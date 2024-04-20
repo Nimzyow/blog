@@ -11,7 +11,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           style={{ minHeight: "100vh", backgroundColor: "black" }}
         >
           <NavBar />
-          <Container>{children}</Container>
+          <Container className="mt-3">{children}</Container>
         </div>
       </div>
     </div>
